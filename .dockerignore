@@ -1,0 +1,17 @@
+.git
+.local
+.agents
+.cache
+.upm
+.pythonlibs
+attached_assets
+node_modules
+dist
+coverage
+htmlcov
+__pycache__
+*.py[cod]
+*.log
+.env
+.env.*
+!.env.example
