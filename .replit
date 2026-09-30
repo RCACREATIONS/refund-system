@@ -22,17 +22,18 @@ args = "Start application"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "PYTHONPATH=backend python backend/run.py & npm run dev"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "backend_pid=; cleanup() { if [ -n \"$backend_pid\" ]; then kill \"$backend_pid\" 2>/dev/null || true; fi; }; trap 'cleanup; exit 143' TERM INT; trap cleanup EXIT; PYTHONPATH=backend python backend/run.py & backend_pid=$!; npm run dev"
+waitForPort = 5000
 
 [[ports]]
 localPort = 5000
 externalPort = 80
+
 
 [[ports]]
 localPort = 8000
