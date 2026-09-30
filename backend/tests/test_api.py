@@ -111,3 +111,13 @@ def test_human_resolution_updates_customer_reply(client: TestClient):
     assert customer_view.status_code == 200
     assert customer_view.json()["review_status"] == "resolved"
     assert "approved" in customer_view.json()["customer_reply"].lower()
+
+
+def test_trust_lab_passes_the_full_attack_corpus(client: TestClient):
+    response = client.post("/api/admin/redteam/run", headers=admin_headers())
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total"] == 24
+    assert body["passed"] == 24
+    assert body["pass_rate"] == 100.0
+    assert all(item["screened"] for item in body["results"] if item["category"] == "multilingual injection")

@@ -43,8 +43,8 @@ class MockClient:
                 needs_clarification=True,
                 clarification_question="Which order ID should we review? Please include an order such as ORD-1001.",
             )
-        skus = []
-        if "only the socks" in normalized or "socks only" in normalized:
+        skus = re.findall(r"\bSKU-[A-Z0-9-]+\b", message.upper())
+        if ("only the socks" in normalized or "socks only" in normalized) and "SKU-SOCKS" not in skus:
             skus.append("SKU-SOCKS")
         return Claim(
             order_id=order_match.group(0).upper(),

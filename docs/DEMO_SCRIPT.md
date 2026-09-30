@@ -18,7 +18,7 @@ Open Support console and use the default `admin-demo-token`. Point out the seede
 
 ## 2:50–3:35 — Trust Lab
 
-Click Run red team. Explain that the same pipeline processes direct overrides, fake role markers, amount inflation, order tampering, and exfiltration attempts. The mock mode should pass every invariant: suspicious attacks do not get approved and customer replies do not disclose internal details.
+Click Run red team. Explain that the same pipeline processes a 24-case corpus covering direct overrides, fake role markers, multilingual and encoded payloads, amount inflation, order tampering, homoglyphs, social engineering, and exfiltration attempts. The mock mode should pass every invariant: suspicious attacks do not get approved and customer replies do not disclose internal details.
 
 ## 3:35–4:20 — Policy Simulator
 

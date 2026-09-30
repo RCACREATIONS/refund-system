@@ -17,6 +17,10 @@ INJECTION_PATTERNS: list[tuple[str, str]] = [
     ("authority_claim", r"\b(my lawyer|manager approved|legal authority|ceo said)\b"),
     ("outcome_json", r'\{\s*["\']outcome["\']\s*:\s*["\']approved["\']'),
     ("encoded_payload", r"\b(?:[A-Za-z0-9+/]{32,}={0,2}|[0-9a-f]{24,})\b"),
+    (
+        "multilingual_override",
+        r"(ignorez\s+toutes\s+les\s+instructions|ignora\s+todas\s+las\s+instrucciones|foju\s+kọ\s+gbogbo\s+awọn\s+ilana)",
+    ),
 ]
 
 
@@ -33,6 +37,11 @@ def screen_message(message: str) -> dict:
         match = re.search(pattern, normalized, flags=re.IGNORECASE | re.DOTALL)
         if match:
             matches.append({"category": category, "evidence": match.group(0)[:80]})
+    if (
+        any("\u0370" <= character <= "\u03ff" or "\u0400" <= character <= "\u04ff" for character in normalized)
+        and re.search(r"(?i)(ord-\d{4}|approve|admin|instruction)", normalized)
+    ):
+        matches.append({"category": "homoglyph", "evidence": "mixed-script instruction-like text"})
     try:
         decoded = base64.b64decode(normalized, validate=True).decode("utf-8", errors="ignore")
         if "ignore" in decoded.lower() or "system" in decoded.lower():

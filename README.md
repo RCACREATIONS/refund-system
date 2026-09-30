@@ -2,6 +2,8 @@
 
 RefundDesk is an AI-assisted customer-support refund system built around a simple trust boundary: **AI proposes, deterministic policy code disposes**. A customer can describe a refund request in natural language, while the policy engine calculates the eligible amount from order facts, applies hard denials and review rules, and produces a customer-safe decision receipt. Support staff get an auditable queue, a Trust Lab that attacks the system, and a Policy Simulator that replays historical decisions under proposed policy changes.
 
+![RefundDesk customer chat](docs/assets/customer-chat.jpg)
+
 ## Quick start
 
 ```bash
@@ -45,6 +47,8 @@ The pipeline runs:
 8. `persist`, with one audit event per stage.
 
 The repository includes a PostgreSQL schema for Compose deployments and an in-memory demo repository for the Replit preview. This keeps the free preview useful without requiring a database process, while the schema and Compose service are ready for the assessment's containerized deployment.
+
+When `USE_DATABASE=true`, the backend retries the PostgreSQL connection during startup instead of silently starting against the in-memory repository. This makes Compose startup resilient to the database healthcheck settling.
 
 ## How the AI integration works
 
@@ -109,7 +113,7 @@ npm run typecheck
 npm run build
 ```
 
-`Makefile` also provides `up`, `down`, `test`, `seed`, and `redteam`. The tests cover policy boundaries, scenario outcomes and amounts, injectable policy parameters, prompt-injection screening, and precedence safety. In a full Docker environment, use the cold-start checklist below to exercise all 15 picker scenarios.
+`Makefile` also provides `up`, `down`, `test`, `seed`, and `redteam`. The tests cover policy boundaries, scenario outcomes and amounts, injectable policy parameters, prompt-injection screening, API operations, the full 24-case Trust Lab corpus, and precedence safety. The standalone runner is `PYTHONPATH=backend python -m app.security.run`. In a full Docker environment, use the cold-start checklist below to exercise all 15 picker scenarios.
 
 ## Assumptions and trade-offs
 
@@ -121,6 +125,10 @@ npm run build
 - Customer updates poll rather than using WebSockets.
 - The policy engine is code with injectable parameters; the simulator previews changes without making them live.
 - No real payments, email, refunds, or external authentication are performed.
+
+## Assessment evidence
+
+See [`docs/ASSESSMENT_CHECKLIST.md`](docs/ASSESSMENT_CHECKLIST.md) for a requirement-by-requirement map of the supplied WORKNOON challenge to the source files, UI routes, and verification commands.
 
 ## Cold-start checklist
 
